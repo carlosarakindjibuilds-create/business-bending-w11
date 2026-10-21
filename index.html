@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>Sistema de Gestión Jukurrpa | Plenitude</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#090d16",
+            panel: "#111827",
+            line: "#253247",
+            mint: "#67e8c0",
+            gold: "#f6c86b"
+          },
+          boxShadow: {
+            glow: "0 0 35px rgba(103, 232, 192, .10)"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      background-color: #090d16;
+      background-image: radial-gradient(ellipse at 12% 0%, rgba(36, 75, 84, .22), transparent 38%),
+                        radial-gradient(ellipse at 90% 8%, rgba(74, 53, 99, .18), transparent 32%);
+    }
+    input[type="range"] { accent-color: #67e8c0; }
+    ::selection { background: rgba(103, 232, 192, .25); }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 antialiased">
+  <div class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+    <header class="mb-7 flex flex-col gap-5 border-b border-line pb-6 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-4">
+        <div class="grid h-12 w-12 place-items-center rounded-2xl border border-mint/25 bg-mint/10 text-xl text-mint shadow-glow" aria-hidden="true">J</div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[.24em] text-mint">Plenitude &amp; Moola</p>
+          <h1 class="mt-1 text-xl font-bold tracking-tight sm:text-2xl">Sistema de Gestión Jukurrpa</h1>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="rounded-full border border-line bg-panel/80 px-3 py-1.5 text-slate-300">DRAGON STACK · Demo</span>
+        <span class="rounded-full border border-mint/20 bg-mint/10 px-3 py-1.5 font-medium text-mint">Simulación local</span>
+        <span class="rounded-full border border-line bg-panel/80 px-3 py-1.5 font-mono text-slate-400" id="versionBadge">v1.0.0</span>
+      </div>
+    </header>
+
+    <main class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(340px,430px)]">
+      <div class="space-y-6">
+        <section class="grid gap-4 sm:grid-cols-3" aria-label="Resumen de la simulación">
+          <article class="rounded-2xl border border-line bg-panel/85 p-5 shadow-glow">
+            <p class="text-sm text-slate-400">Moola Score</p>
+            <div class="mt-2 flex items-end gap-2">
+              <span id="scoreValue" class="text-4xl font-bold tracking-tight text-mint">0</span>
+              <span class="pb-1 text-sm text-slate-500">puntos</span>
+            </div>
+            <p id="scoreHint" class="mt-2 text-xs text-slate-500">Calculado con esfuerzo y contribución</p>
+          </article>
+          <article class="rounded-2xl border border-line bg-panel/85 p-5">
+            <p class="text-sm text-slate-400">Estatus de contribución</p>
+            <div class="mt-3 flex items-center gap-3">
+              <span id="statusDot" class="h-3 w-3 rounded-full bg-slate-500"></span>
+              <span id="statusLabel" class="text-lg font-semibold text-slate-300">Semilla</span>
+            </div>
+            <p id="statusDescription" class="mt-2 text-xs text-slate-500">Tu actividad define el nivel alcanzado.</p>
+          </article>
+          <article class="rounded-2xl border border-line bg-panel/85 p-5">
+            <p class="text-sm text-slate-400">Telemetría</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-40"></span>
+                <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-mint"></span>
+              </span>
+              <span class="font-semibold text-mint">Sensing activo</span>
+            </div>
+            <p class="mt-2 text-xs text-slate-500">Valores sintéticos · sin sensores reales</p>
+          </article>
+        </section>
+
+        <section class="rounded-2xl border border-line bg-panel/85 p-5 shadow-glow sm:p-6" aria-labelledby="sensingHeading">
+          <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[.2em] text-mint">01 · IoT / Sensing</p>
+              <h2 id="sensingHeading" class="mt-1 text-lg font-semibold">Simulador de esfuerzo voluntario</h2>
+              <p class="mt-1 text-sm text-slate-400">Ajusta los controles para actualizar la telemetría y el cálculo en tiempo real.</p>
+            </div>
+            <span class="rounded-lg border border-line bg-ink/70 px-2.5 py-1 font-mono text-xs text-slate-400">DATA: SYNTHETIC</span>
+          </div>
+
+          <div class="grid gap-6 md:grid-cols-2">
+            <div>
+              <div class="mb-2 flex items-center justify-between">
+                <label for="hoursInput" class="text-sm font-medium text-slate-200">Horas de voluntariado</label>
+                <span class="rounded-md bg-ink px-2.5 py-1 font-mono text-sm text-mint"><span id="hoursValue">3</span> h</span>
+              </div>
+              <input id="hoursInput" type="range" min="1" max="12" step="1" value="3" class="w-full cursor-pointer">
+              <div class="mt-1 flex justify-between text-xs text-slate-600"><span>1 h</span><span>12 h</span></div>
+            </div>
+            <div>
+              <label for="activityInput" class="mb-2 block text-sm font-medium text-slate-200">Tipo de actividad</label>
+              <select id="activityInput" class="w-full rounded-xl border border-line bg-ink px-3 py-2.5 text-sm text-slate-100 outline-none transition focus:border-mint focus:ring-2 focus:ring-mint/20">
+                <option value="community">Apoyo comunitario</option>
+                <option value="care">Acompañamiento y cuidados</option>
+                <option value="environment">Restauración ambiental</option>
+                <option value="skills">Enseñanza de habilidades</option>
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <div class="mb-2 flex items-center justify-between">
+                <label for="satisfactionInput" class="text-sm font-medium text-slate-200">Satisfacción de la comunidad</label>
+                <span class="font-mono text-sm text-gold"><span id="satisfactionValue">4</span> / 5</span>
+              </div>
+              <input id="satisfactionInput" type="range" min="1" max="5" step="1" value="4" class="w-full cursor-pointer">
+              <div class="mt-1 flex justify-between text-xs text-slate-600"><span>1 · Baja</span><span>5 · Alta</span></div>
+              <p class="mt-2 text-xs text-slate-500">Valor ilustrativo para la simulación; no representa una encuesta real.</p>
+            </div>
+          </div>
+
+          <div class="mt-6 grid gap-3 rounded-xl border border-line bg-ink/60 p-4 sm:grid-cols-3">
+            <div><p class="text-xs text-slate-500">Actividad</p><p id="telemetryActivity" class="mt-1 text-sm font-medium">Apoyo comunitario</p></div>
+            <div><p class="text-xs text-slate-500">Esfuerzo sintético</p><p id="telemetryEffort" class="mt-1 font-mono text-sm text-mint">3.0 unidades</p></div>
+            <div><p class="text-xs text-slate-500">Actualizado</p><p id="telemetryTimestamp" class="mt-1 font-mono text-sm text-slate-300">—</p></div>
+          </div>
+        </section>
+
+        <section class="grid gap-6 lg:grid-cols-2">
+          <article class="rounded-2xl border border-line bg-panel/85 p-5 sm:p-6" aria-labelledby="marketHeading">
+            <div class="mb-5 flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[.2em] text-gold">02 · Lógica de mercado</p>
+                <h2 id="marketHeading" class="mt-1 text-lg font-semibold">Tarjeta ciudadana BLC</h2>
+              </div>
+              <span class="rounded-lg border border-gold/20 bg-gold/10 px-2.5 py-1 font-mono text-xs text-gold">DEMO</span>
+            </div>
+            <div class="mb-4 flex items-center gap-3 rounded-xl border border-line bg-ink/60 p-3">
+              <div class="grid h-10 w-14 place-items-center rounded-lg border border-gold/30 bg-gold/10 font-bold tracking-widest text-gold" aria-hidden="true">BLC</div>
+              <div><p class="text-sm font-medium">Tarjeta de beneficios simulada</p><p class="text-xs text-slate-500">Saldo / costo en esta demo: $0</p></div>
+            </div>
+            <p class="mb-3 text-sm text-slate-400">Selecciona una necesidad básica para simular su cobertura:</p>
+            <div class="space-y-2">
+              <button type="button" data-need="comida" class="need-button flex w-full items-center justify-between rounded-xl border border-line bg-ink/50 px-4 py-3 text-left transition hover:border-mint/40">
+                <span class="flex items-center gap-3"><span aria-hidden="true">🥗</span><span class="text-sm font-medium">Comida</span></span>
+                <span class="need-status text-xs text-slate-500">Disponible</span>
+              </button>
+              <button type="button" data-need="vivienda" class="need-button flex w-full items-center justify-between rounded-xl border border-line bg-ink/50 px-4 py-3 text-left transition hover:border-mint/40">
+                <span class="flex items-center gap-3"><span aria-hidden="true">⌂</span><span class="text-sm font-medium">Vivienda</span></span>
+                <span class="need-status text-xs text-slate-500">Disponible</span>
+              </button>
+              <button type="button" data-need="energia" class="need-button flex w-full items-center justify-between rounded-xl border border-line bg-ink/50 px-4 py-3 text-left transition hover:border-mint/40">
+                <span class="flex items-center gap-3"><span aria-hidden="true">⚡</span><span class="text-sm font-medium">Energía</span></span>
+                <span class="need-status text-xs text-slate-500">Disponible</span>
+              </button>
+            </div>
+            <p id="marketNotice" class="mt-4 min-h-5 text-xs text-slate-500" aria-live="polite">Simulación conceptual: no se realizan pagos ni se entregan beneficios reales.</p>
+          </article>
+
+          <article class="rounded-2xl border border-line bg-panel/85 p-5 sm:p-6" aria-labelledby="mlHeading">
+            <p class="text-xs font-semibold uppercase tracking-[.2em] text-violet-300">03 · Lógica de ML (demo)</p>
+            <h2 id="mlHeading" class="mt-1 text-lg font-semibold">Modelo explicable de contribución</h2>
+            <p class="mt-2 text-sm leading-6 text-slate-400">Estimación demostrativa con reglas ponderadas. No es un modelo entrenado ni determina el valor de una persona.</p>
+            <div class="mt-5 space-y-3">
+              <div class="flex items-center justify-between rounded-lg bg-ink/60 px-3 py-2.5 text-sm"><span class="text-slate-400">Dificultad de actividad</span><span id="difficultyValue" class="font-mono text-slate-200">—</span></div>
+              <div class="flex items-center justify-between rounded-lg bg-ink/60 px-3 py-2.5 text-sm"><span class="text-slate-400">Contribución / esfuerzo</span><span id="contributionValue" class="font-mono text-slate-200">—</span></div>
+              <div class="flex items-center justify-between rounded-lg bg-ink/60 px-3 py-2.5 text-sm"><span class="text-slate-400">Satisfacción simulada</span><span id="modelSatisfaction" class="font-mono text-slate-200">—</span></div>
+            </div>
+            <div class="mt-4 rounded-lg border border-violet-300/15 bg-violet-300/5 p-3 text-xs leading-5 text-slate-400">
+              Fórmula demo: puntos = redondeo(10 × horas × dificultad × factor de satisfacción). Los pesos son ilustrativos y editables en el código.
+            </div>
+          </article>
+        </section>
+
+        <section class="rounded-2xl border border-line bg-panel/85 p-5 sm:p-6" aria-labelledby="securityHeading">
+          <div class="mb-4 flex items-start gap-3">
+            <div id="shieldIcon" class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-mint/20 bg-mint/10 text-lg text-mint" aria-hidden="true">✓</div>
+            <div class="flex-1">
+              <p class="text-xs font-semibold uppercase tracking-[.2em] text-mint">04 · Security Floor</p>
+              <h2 id="securityHeading" class="mt-1 text-lg font-semibold">Comentarios seguros</h2>
+              <p class="mt-1 text-sm text-slate-400">Se rechazan los caracteres <code class="text-rose-300">&lt;</code> y <code class="text-rose-300">&gt;</code>. El contenido no se interpreta como HTML.</p>
+            </div>
+            <span id="securityState" class="rounded-full border border-mint/20 bg-mint/10 px-2.5 py-1 text-xs font-medium text-mint">Escudo activo</span>
+          </div>
+          <label for="commentInput" class="mb-2 block text-sm font-medium text-slate-300">Comentario de la simulación</label>
+          <textarea id="commentInput" rows="3" maxlength="240" autocomplete="off" class="w-full resize-y rounded-xl border border-line bg-ink px-3 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-mint focus:ring-2 focus:ring-mint/20" placeholder="Escribe un comentario (máximo 240 caracteres)…"></textarea>
+          <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+            <p id="securityAlert" class="min-h-5 text-sm text-slate-500" role="alert" aria-live="assertive">Entrada validada localmente.</p>
+            <span id="commentCount" class="text-xs text-slate-600">0 / 240</span>
+          </div>
+        </section>
+      </div>
+
+      <aside class="xl:sticky xl:top-6" aria-labelledby="auditHeading">
+        <section class="overflow-hidden rounded-2xl border border-line bg-[#0d1420] shadow-glow">
+          <div class="flex items-center justify-between border-b border-line px-5 py-4">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[.2em] text-mint">Live system state</p>
+              <h2 id="auditHeading" class="mt-1 text-base font-semibold">Auditoría JSON</h2>
+            </div>
+            <span class="flex items-center gap-2 text-xs text-slate-400"><span class="h-2 w-2 rounded-full bg-mint"></span>EN VIVO</span>
+          </div>
+          <div class="border-b border-line px-5 py-3 text-xs text-slate-500">
+            App <span id="auditVersion" class="font-mono text-slate-300">1.0.0</span>
+            <span class="px-1.5 text-line">|</span>
+            Actualización <span id="auditTime" class="font-mono text-slate-300">—</span>
+          </div>
+          <pre class="max-h-[72vh] overflow-auto p-5 text-xs leading-5 text-emerald-200/90"><code id="auditJson" aria-live="polite">{}</code></pre>
+          <div class="border-t border-line px-5 py-3 text-xs leading-5 text-slate-500">
+            Vista de auditoría de la sesión actual. Datos ficticios en el navegador; no se envían a un servidor.
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="mt-8 border-t border-line pt-4 text-center text-xs leading-5 text-slate-600">
+      Prototipo educativo · Telemetría, puntuación y beneficios representados son simulados y no constituyen una oferta de servicios.
+    </footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    const APP_VERSION = "1.0.0";
+    const activityOptions = {
+      community: { label: "Apoyo comunitario", difficulty: 1.0 },
+      care: { label: "Acompañamiento y cuidados", difficulty: 1.3 },
+      environment: { label: "Restauración ambiental", difficulty: 1.2 },
+      skills: { label: "Enseñanza de habilidades", difficulty: 1.1 }
+    };
+    const statusTiers = [
+      { minimum: 0, name: "Semilla", color: "text-slate-300", dot: "bg-slate-400", description: "Cada aporte es un comienzo." },
+      { minimum: 40, name: "Brote", color: "text-emerald-300", dot: "bg-emerald-400", description: "Tu participación empieza a crecer." },
+      { minimum: 100, name: "Guardián", color: "text-sky-300", dot: "bg-sky-400", description: "Una contribución constante a la comunidad." },
+      { minimum: 200, name: "Tejedor", color: "text-violet-300", dot: "bg-violet-400", description: "Conectas esfuerzo y colaboración." },
+      { minimum: 350, name: "Jukurrpa", color: "text-gold", dot: "bg-gold", description: "Reconocimiento simbólico en esta demo." }
+    ];
+    const needs = { comida: false, vivienda: false, energia: false };
+    let lastSafeComment = "";
+    let securityAlertTimer;
+
+    const elements = {
+      hours: document.getElementById("hoursInput"),
+      activity: document.getElementById("activityInput"),
+      satisfaction: document.getElementById("satisfactionInput"),
+      comment: document.getElementById("commentInput"),
+      audit: document.getElementById("auditJson"),
+      securityAlert: document.getElementById("securityAlert"),
+      securityState: document.getElementById("securityState"),
+      shieldIcon: document.getElementById("shieldIcon")
+    };
+
+    function getCurrentState() {
+      const hours = Number(elements.hours.value);
+      const satisfaction = Number(elements.satisfaction.value);
+      const activity = activityOptions[elements.activity.value];
+      const satisfactionFactor = 0.7 + satisfaction * 0.1;
+      const effortUnits = Number((hours * activity.difficulty).toFixed(1));
+      const points = Math.round(10 * hours * activity.difficulty * satisfactionFactor);
+      const status = [...statusTiers].reverse().find((tier) => points >= tier.minimum) || statusTiers[0];
+      const now = new Date();
+
+      return {
+        app: { name: "Sistema de Gestión Jukurrpa", version: APP_VERSION },
+        mode: "simulation",
+        updated_at: now.toISOString(),
+        sensing: {
+          source: "simulated",
+          volunteer_effort: {
+            hours,
+            activity_type: elements.activity.value,
+            activity_label: activity.label,
+            effort_units: effortUnits
+          },
+          community_satisfaction: {
+            simulated_rating: satisfaction,
+            scale: "1-5",
+            real_survey_data: false
+          }
+        },
+        ml_demo: {
+          model_type: "transparent_weighted_rule",
+          trained_model: false,
+          difficulty_factor: activity.difficulty,
+          contribution_factor: hours,
+          satisfaction_factor: Number(satisfactionFactor.toFixed(2)),
+          moola_score: points,
+          status: status.name
+        },
+        blc_market_demo: {
+          real_transaction: false,
+          simulated_cost: 0,
+          currency: "BLC (demo)",
+          needs: { ...needs }
+        },
+        security: {
+          comments_local_only: true,
+          dangerous_angle_brackets_blocked: true,
+          comment_length: elements.comment.value.length
+        }
+      };
+    }
+
+    function render() {
+      const state = getCurrentState();
+      const hours = state.sensing.volunteer_effort.hours;
+      const satisfaction = state.sensing.community_satisfaction.simulated_rating;
+      const status = [...statusTiers].reverse().find((tier) => state.ml_demo.moola_score >= tier.minimum) || statusTiers[0];
+      const time = new Date(state.updated_at).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+      document.getElementById("hoursValue").textContent = String(hours);
+      document.getElementById("satisfactionValue").textContent = String(satisfaction);
+      document.getElementById("scoreValue").textContent = String(state.ml_demo.moola_score);
+      document.getElementById("scoreHint").textContent = `${hours} h · dificultad ×${state.ml_demo.difficulty_factor.toFixed(1)} · satisfacción ${satisfaction}/5`;
+      document.getElementById("statusLabel").textContent = status.name;
+      document.getElementById("statusDescription").textContent = status.description;
+      document.getElementById("statusLabel").className = `text-lg font-semibold ${status.color}`;
+      document.getElementById("statusDot").className = `h-3 w-3 rounded-full ${status.dot}`;
+      document.getElementById("telemetryActivity").textContent = state.sensing.volunteer_effort.activity_label;
+      document.getElementById("telemetryEffort").textContent = `${state.sensing.volunteer_effort.effort_units.toFixed(1)} unidades`;
+      document.getElementById("telemetryTimestamp").textContent = time;
+      document.getElementById("difficultyValue").textContent = `×${state.ml_demo.difficulty_factor.toFixed(1)}`;
+      document.getElementById("contributionValue").textContent = `${hours} h`;
+      document.getElementById("modelSatisfaction").textContent = `${satisfaction}/5 (×${state.ml_demo.satisfaction_factor.toFixed(2)})`;
+      document.getElementById("auditTime").textContent = time;
+      document.getElementById("commentCount").textContent = `${elements.comment.value.length} / 240`;
+
+      document.querySelectorAll(".need-button").forEach((button) => {
+        const selected = needs[button.dataset.need];
+        const label = button.querySelector(".need-status");
+        label.textContent = selected ? "Cubierta · $0 demo" : "Disponible";
+        label.className = selected ? "need-status text-xs font-medium text-mint" : "need-status text-xs text-slate-500";
+        button.className = `need-button flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition ${selected ? "border-mint/40 bg-mint/5" : "border-line bg-ink/50 hover:border-mint/40"}`;
+        button.setAttribute("aria-pressed", String(selected));
+      });
+
+      elements.audit.textContent = JSON.stringify(state, null, 2);
+    }
+
+    function showSecurityAlert(message) {
+      clearTimeout(securityAlertTimer);
+      elements.securityAlert.textContent = message;
+      elements.securityAlert.className = "min-h-5 text-sm font-medium text-rose-300";
+      elements.securityState.textContent = "Entrada bloqueada";
+      elements.securityState.className = "rounded-full border border-rose-400/30 bg-rose-400/10 px-2.5 py-1 text-xs font-medium text-rose-300";
+      elements.shieldIcon.className = "grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-rose-400/30 bg-rose-400/10 text-lg text-rose-300";
+      elements.shieldIcon.textContent = "!";
+      securityAlertTimer = setTimeout(() => {
+        elements.securityAlert.textContent = "Entrada validada localmente.";
+        elements.securityAlert.className = "min-h-5 text-sm text-slate-500";
+        elements.securityState.textContent = "Escudo activo";
+        elements.securityState.className = "rounded-full border border-mint/20 bg-mint/10 px-2.5 py-1 text-xs font-medium text-mint";
+        elements.shieldIcon.className = "grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-mint/20 bg-mint/10 text-lg text-mint";
+        elements.shieldIcon.textContent = "✓";
+      }, 3500);
+    }
+
+    function containsBlockedCharacters(value) {
+      return /[<>]/.test(value);
+    }
+
+    [elements.hours, elements.activity, elements.satisfaction].forEach((control) => {
+      control.addEventListener("input", render);
+      control.addEventListener("change", render);
+    });
+
+    document.querySelectorAll(".need-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const need = button.dataset.need;
+        needs[need] = !needs[need];
+        document.getElementById("marketNotice").textContent = `${button.querySelector("span.text-sm").textContent}: ${needs[need] ? "cubierta" : "disponible"} en la simulación · costo $0 demo. No es un beneficio real.`;
+        render();
+      });
+    });
+
+    elements.comment.addEventListener("beforeinput", (event) => {
+      if (typeof event.data === "string" && containsBlockedCharacters(event.data)) {
+        event.preventDefault();
+        showSecurityAlert("Escudo activado: se bloqueó la entrada de caracteres < o >.");
+      }
+    });
+
+    elements.comment.addEventListener("paste", (event) => {
+      const pastedText = event.clipboardData ? event.clipboardData.getData("text") : "";
+      if (containsBlockedCharacters(pastedText)) {
+        event.preventDefault();
+        showSecurityAlert("Escudo activado: el texto pegado contiene caracteres bloqueados.");
+      }
+    });
+
+    elements.comment.addEventListener("input", () => {
+      if (containsBlockedCharacters(elements.comment.value)) {
+        elements.comment.value = lastSafeComment;
+        showSecurityAlert("Escudo activado: se rechazó la entrada no permitida.");
+      } else {
+        lastSafeComment = elements.comment.value;
+      }
+      render();
+    });
+
+    document.getElementById("versionBadge").textContent = `v${APP_VERSION}`;
+    document.getElementById("auditVersion").textContent = APP_VERSION;
+    render();
+  </script>
+</body>
+</html>
