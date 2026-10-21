@@ -32,3 +32,7 @@ Estas decisiones definen el alcance de la experiencia de simulación y sus contr
 - [ ] **Revisión antes de compartir:** comprobar que no se hayan añadido llaves, archivos `.env` reales ni datos personales al control de versiones.
 
 > Las casillas marcadas confirman las decisiones y reglas observables en el alcance documentado y en `.gitignore`; no sustituyen una auditoría del historial de Git ni pruebas de seguridad de una implementación.
+
+### Validación del Piso de Seguridad
+
+La caja de comentarios está implementada para bloquear caracteres `<` y `>`, incluidos los de etiquetas como `<script>`, mostrar una alerta y rechazar la entrada. La verificación manual en navegador queda pendiente; no se marca como confirmada hasta probar la interacción en la aplicación.
