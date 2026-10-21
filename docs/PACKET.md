@@ -201,5 +201,7 @@ El primer prototipo se limita a comprobar el flujo básico de una sesión volunt
 - Clasificaciones, tablas de posiciones, incentivos económicos o credenciales laborales.
 - Integraciones con nómina, contratación, prestaciones, servicios gubernamentales o expedientes de ciudadanos.
 - Despliegue público, expansión a otras comunidades o recopilación de conocimiento cultural sensible.
+### Métrica de Éxito del Ciudadano
 
+En el escenario de post-escasez, la métrica de éxito final de Jukurrpa busca reflejar un incremento del índice de felicidad comunitaria, estimado automáticamente a partir de la telemetría de pulseras IoT. Esta señal es un indicador indirecto, no una medida definitiva de felicidad; su uso requeriría participación voluntaria, consentimiento informado y protección de datos. Para el prototipo actual, la telemetría debe ser simulada.
 **Criterio para ampliar el alcance:** no pasar de datos simulados a datos reales hasta contar con aprobación informada de las personas y organizaciones implicadas, gobernanza comunitaria explícita, revisión de privacidad y seguridad, finalidad documentada y una vía efectiva para retirar datos y corregir registros.
